@@ -23,6 +23,8 @@ export type DataType = {
 //     id: string
 // }
 
+export type FilterValuesType = 'all' | 'onIncrease' | 'salaryBet'
+
 
 
 function App() {
@@ -31,6 +33,8 @@ function App() {
         {name:"Timur", salary:1500, raising: false, increase: true, id: v1()},
         {name:"Sergey", salary:3000, raising: false, increase: true, id: v1()}
     ])
+
+    let [filter , setFilter] = useState('all')
 
     const changeIncrease = (id: string ) => {
         let upempl = employees.map((user) => {
@@ -52,7 +56,6 @@ function App() {
         })
         setEmployees(upempl)
     }
-
     const addEmpoyeer = (name: string, salary: string) => {
         const employee = {
             name,
@@ -63,7 +66,6 @@ function App() {
         const updateEmpl = [employee, ...employees]
         setEmployees(updateEmpl)
     }
-
     const removeEmpoyeer = (id: string) => {
         let updateEmpl = employees.filter(item =>
             item.id !== id ? item : null
@@ -72,17 +74,31 @@ function App() {
         setEmployees(updateEmpl)
     }
 
+    const changeFilter = (value: FilterValuesType) => {
+        setFilter(value)
+    }
+
+    let updateEmpoyee = employees
+
+    if(filter === 'onIncrease') {
+        updateEmpoyee = employees.filter(item => item.increase)
+    }
+    if(filter === 'salaryBet') {
+        updateEmpoyee = employees.filter(item => item.salary >= 1000 )
+    }
+
+
     return (
         <div className="app">
             <AppInfo data={employees}/>
 
             <div className="search-panel">
                 <SearchPanel/>
-                <AppFilter/>
+                <AppFilter changeFilter={changeFilter}/>
             </div>
 
             <EmployeesList
-                data={employees}
+                data={updateEmpoyee}
                 changeIncrease={changeIncrease}
                 upRaising={upRaising}
                 removeEmpoyeer={removeEmpoyeer}
