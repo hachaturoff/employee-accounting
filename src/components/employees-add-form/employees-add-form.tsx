@@ -1,4 +1,4 @@
-import './employees-add-form.css';
+import './employees-add-form.scss';
 import {ChangeEvent, useState} from "react";
 
 type PropsType = {

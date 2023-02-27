@@ -29,10 +29,24 @@ export type FilterValuesType = 'all' | 'onIncrease' | 'salaryBet'
 
 function App() {
     const [employees , setEmployees] = useState([
-        {name:"Oleg", salary:800, raising: true, increase: true, id: v1()},
-        {name:"Timur", salary:1500, raising: false, increase: true, id: v1()},
-        {name:"Sergey", salary:3000, raising: false, increase: true, id: v1()}
+        {name:"Oleg", salary:800, raising: true, increase: false, id: v1()},
+        {name:"Timur", salary:1500, raising: false, increase: false, id: v1()},
+        {name:"Sergey", salary:3000, raising: false, increase: false, id: v1()}
     ])
+    const [term, setTerm] = useState('')
+
+
+    const searchEmp = (items : Array<DataType>, term: string) => {
+        if(term.length === 0) {
+            return items
+        }
+        return items.filter(item => {
+            return item.name.indexOf(term) > -1
+            // if(item.name.toLowerCase() === term.toLowerCase()) {
+            //
+            // }
+        })
+    }
 
     let [filter , setFilter] = useState('all')
 
@@ -87,18 +101,19 @@ function App() {
         updateEmpoyee = employees.filter(item => item.salary >= 1000 )
     }
 
+    const visibleData = searchEmp(updateEmpoyee, term)
 
     return (
         <div className="app">
             <AppInfo data={employees}/>
 
             <div className="search-panel">
-                <SearchPanel/>
+                <SearchPanel setTerm={setTerm} term={term}/>
                 <AppFilter changeFilter={changeFilter}/>
             </div>
 
             <EmployeesList
-                data={updateEmpoyee}
+                data={visibleData}
                 changeIncrease={changeIncrease}
                 upRaising={upRaising}
                 removeEmpoyeer={removeEmpoyeer}
